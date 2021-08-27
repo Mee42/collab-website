@@ -21,7 +21,7 @@ function getStatus() {
 function updatePage(newStatus) {
     const isOpen = $('#isOpen');
     if (newStatus.open) {
-        document.getElementById('isOpen').innerHTML = 'OPEN by appointment ONLY';
+        document.getElementById('isOpen').innerHTML = 'OPEN';
         isOpen.removeClass('text-danger');
         isOpen.addClass('text-success');
     } else {
