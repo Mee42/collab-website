@@ -20,21 +20,40 @@ function loadTab(index) {
 }
 
 function hideAll() {
-    $('#self').addClass('hidden');
+    $('#self').addClass('d-none');
     $('#selfTab').removeClass('active');
-    $('#lm').addClass('hidden');
+    $('#lm').addClass('d-none');
     $('#lmTab').removeClass('active');
-    $('#exec').addClass('hidden');
+    $('#exec').addClass('d-none');
     $('#execTab').removeClass('active');
-    $('#admin').addClass('hidden');
+    $('#admin').addClass('d-none');
     $('#adminTab').removeClass('active');
-    $('#grant').addClass('hidden');
+    $('#grant').addClass('d-none');
     $('#grantTab').removeClass('active');
 }
 
 function show(tab) {
-    $('#' + tab).removeClass('hidden');
+    $('#' + tab).removeClass('d-none');
     $('#' + tab + 'Tab').addClass('active')
+}
+
+function addResponsibility() {
+    const respName = $('#respName').val();
+    if (!isValidResponsibilty(respName)) {
+        addError('respName', 'Invalid name, must be alphanumeric (spaces allowed)');
+        return false;
+    }
+    const data = {'respName': respName};
+    postData('/manage/addResponsibility', JSON.stringify(data), function (statusCode) {
+        switch (statusCode) {
+            case 0:
+                success('respName', 'Responsibility added successfully!');
+                break;
+            case 1:
+                addError('respName', "Username is already taken!");
+                break;
+        }
+    });
 }
 
 function changeUsername() {
@@ -324,7 +343,7 @@ function resetDatabase() {
 
 function logout() {
     postData('/users/logout', '', function () {
-        window.location.replace('/manage');
+        window.location.replace('/');
     });
 }
 

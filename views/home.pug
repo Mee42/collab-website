@@ -1,12 +1,11 @@
+include common
+
 mixin panel(title, id)
-    .panel.panel-info
-        .panel-heading(data-toggle='collapse' role='button' aria-expanded='false' href!='#' + id + 'Body' aria-controls!=id + 'Body')= title
-        if id
-            .panel-body.collapse(id!=id + 'Body')
-                block
-        else
-            .panel-body(id!=id + 'Body')
-                block
+    .card.my-3
+        .card-header(data-bs-toggle='collapse' role='button' aria-expanded='false' href!='#' + id + 'Body' aria-controls!=id + 'Body')= title
+        .collapse(id!=id + 'Body')
+            .card-body.px-3
+                    block
 
 mixin password(title, placeholder, ident)
     +input(title, placeholder, ident, 'password')
@@ -15,151 +14,153 @@ mixin text(title, placeholder, ident, value)
     +input(title, placeholder, ident, 'text', value)
 
 mixin input(title, placeholder, ident, type, value)
-    .form-group(id!=ident + 'Group')
-        label.col-md-offset-1.col-md-4.control-label(for!=ident)=title
-        .col-md-6
+    .row.g-3.my-1.justify-content-center(id!=ident + 'Group')
+        .col-3.text-end
+            label.col-form-label(for!=ident)=title
+        .col-6
             input.form-control(type!=type, id!=ident, placeholder!=placeholder, value!= value)
 
 mixin form
-    form.form-horizontal(onSubmit!=action + ';return false;')
+    form(onSubmit!=action + ';return false;')
         block
 
 mixin button(title, action)
-    button.btn-info.btn.col-md-offset-3.col-md-6(onClick!=action)=title
+    .row.my-3.justify-content-center
+        button.btn.btn-outline-primary.col-6(onClick!=action)=title
 
 doctype html
 html(lang=en)
     head
         title WPI Collablab - #{title}
-        link(href='/css/bootstrap.css', integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous', rel='stylesheet')
-        link(href='/css/bootstrap-theme.css', integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp', crossorigin='anonymous', rel='stylesheet')
-        link(href="/css/bootstrap-datepicker.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous", rel='stylesheet')
+        link(href='/css/bootstrap.css',  rel='stylesheet')
+        link(href="/css/bootstrap-datepicker.css"  rel='stylesheet')
         link(href='/css/home.css' , rel='stylesheet')
+        link(href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css", rel="stylesheet")
     body
+        +default_nav_bar(true)
+            button.ms-auto.btn.btn-outline-primary(style='display:inline;' onClick='toStatus()')
+                i.bi-chevron-left
+                =" Lab Status"
+            button.mx-2.btn.btn-outline-primary(style='display:inline; ' onClick='logout()')
+                i.bi-box-arrow-right
+                =" Logout"
         .container
-            .col-md-10.col-md-offset-1
-                .well
-                    h1.text-center(style='display:inline;')
-                        | Collablab - Management
-                    button.pull-right.btn.btn-primary(style='display:inline; ' onClick='logout()')
-                        span.glyphicon.glyphicon-log-out
-                        =" Logout"
-                    p.pull-right
-                        | &nbsp;&nbsp;
-                    button.pull-right.btn.btn-primary(style='display:inline;' onClick='toStatus()')
-                        span.glyphicon.glyphicon-menu-left
-                        =" Lab Status"
-                    ="      "
-            .col-md-10.col-md-offset-1
-                ul.nav.nav-tabs.nav-justified
-                    li.active(id='selfTab' role='presentation')
-                        a(href="#" onClick="loadTab(0)") Yourself
-                    if user.labMonitor === true || user.admin === true
-                        li(id='lmTab' role='presentation')
-                            a(href="#" onClick="loadTab(1)") Lab monitor
-                    if user.exec === true || user.admin === true
-                        li(id='execTab' role='presentation')
-                            a(href="#" onClick="loadTab(2)") Executive
-                    if user.admin === true
-                        li(id='adminTab' role='presentation')
-                            a(href="#" onClick="loadTab(3)") Administrator
-                    if (user.labMonitor !== true || user.exec !== true) && user.admin !== true
-                        li(id='grantTab' role='presentation')
-                            a(href='#' onClick='loadTab(4)')  Get Privileges
-            #self.col-md-8.col-md-offset-2
-                br
-                +panel('Update Your Nickname')
-                    +form
-                        +text('Desired Nickname', 'Enter your new nickname', 'nickname', user.nickname)
-                        +button('Set Nickname', 'changeNickname()')
-                +panel('Change Your Username', 'username')
-                    +form
-                        +text('Desired Username', 'Enter your desired username', 'newUsername')
-                        +button('Change Username', 'changeUsername()')
-                +panel('Change Your Password', 'password')
-                    +form
-                        +password('Your Current Password', 'Enter your current password', 'oldPassword')
-                        +password('Your New Password', 'Enter your new password', 'newPassword')
-                        +password('Confirm Password', 'Re-Enter your new password', 'confirmPassword')
-                        +button('Change Password', 'changePassword()')
-                +panel('Change Your Name', 'name')
-                    +form
-                        +text('Your New Name', 'Enter your desired new name', 'newName')
-                        +button('Change Name', 'changeName()')
-                +panel('Delete Your Account', 'deleteSelf')
-                    +form
-                        +password('Password', 'Enter your password to confirm action', 'password')
-                        +button('Delete Account', 'deleteAccount()')
-            if (user.labMonitor === true || user.admin === true)
-                #lm.col-md-8.col-md-offset-2.hidden
-                    br
-                    +panel('Close Lab')
-                        +form
-                            +button('Close Lab', 'closeLab()')
-            if (user.exec === true || user.admin === true)
-                #exec.col-md-8.col-md-offset-2.hidden
-                    br
-                    if user.labMonitor !== true
-                        +panel('Close Lab')
+            .row.justify-content-center
+                .col-md-8.mt-5
+                    ul.nav.nav-tabs.nav-fill
+                        li.nav-item(role='presentation')
+                            a#selfTab.nav-link.active(href="#" onClick="loadTab(0)") Yourself
+                        if user.labMonitor === true || user.admin === true
+                            li.nav-item(role='presentation')
+                                a#lmTab.nav-link(href="#" onClick="loadTab(1)") Lab monitor
+                        if user.exec === true || user.admin === true
+                            li.nav-item(role='presentation')
+                                a#execTab.nav-link(href="#" onClick="loadTab(2)") Executive
+                        if user.admin === true
+                            li.nav-item(role='presentation')
+                                a#adminTab.nav-link(href="#" onClick="loadTab(3)") Administrator
+                        if (user.labMonitor !== true || user.exec !== true || user.admin !== true)
+                            li.nav-item(role='presentation')
+                                a#grantTab.nav-link(href='#' onClick='loadTab(4)')  Get Privileges
+                    #self.col
+                        br
+                        +panel('Update Your Nickname', 'nickname')
                             +form
-                                +button('Close Lab', 'closeLab()')
-                    +panel('Grant Lab Monitor', 'grantLM')
-                        +form
-                            +text('Username or ID Number', 'Enter a user identifier', 'grantLMID')
-                            +button('Grant','grantLabMonitor()')
-                    +panel('Delete User', 'deleteUser')
-                        +form
-                            +text('Username or ID Number', 'Enter a user identifier', 'toDelete')
-                            +button('Delete', 'deleteUser()')
-                    +panel('Reset User Password', 'passwordReset')
-                        +form
-                            .col-md-offset-2 Note: User's password will be reset to their ID number
+                                +text('Desired Nickname', 'Enter your new nickname', 'nickname', user.nickname)
+                                +button('Set Nickname', 'changeNickname()')
+                        +panel('Change Your Username', 'username')
+                            +form
+                                +text('Desired Username', 'Enter your desired username', 'newUsername')
+                                +button('Change Username', 'changeUsername()')
+                        +panel('Change Your Password', 'password')
+                            +form
+                                +password('Your Current Password', 'Enter your current password', 'oldPassword')
+                                +password('Your New Password', 'Enter your new password', 'newPassword')
+                                +password('Confirm Password', 'Re-Enter your new password', 'confirmPassword')
+                                +button('Change Password', 'changePassword()')
+                        +panel('Change Your Name', 'name')
+                            +form
+                                +text('Your New Name', 'Enter your desired new name', 'newName')
+                                +button('Change Name', 'changeName()')
+                        +panel('Delete Your Account', 'deleteSelf')
+                            +form
+                                +password('Password', 'Enter your password to confirm action', 'password')
+                                +button('Delete Account', 'deleteAccount()')
+                    if (user.labMonitor === true || user.admin === true)
+                        #lm.col.d-none
                             br
-                            +text('Username or ID Number', "Enter the user's identifier to reset their password", 'resetPasswordID')
-                            +button('Reset User Password','resetPassword()')
-                    +panel('View Visits','viewVisits')
-                        +form
-                            //.form-group
-                            //    label.col-md-4.col-md-offset-1.control-label(for="#visitStartDate") Start Date
-                            //    #visitStartDateGroup.col-md-6
-                            //        .input-group.mb-3
-                            //            input#visitStartDate.form-control(type='text', data-provide="datepicker-inline")
-                            //            span.input-group-addon
-                            //                i.glyphicon.glyphicon-calendar
-                            //.form-group
-                            //    label.col-md-4.col-md-offset-1.control-label(for="#visitEndDate") End Date
-                            //    #visitEndDateGroup.col-md-6
-                            //        .input-group.mb-3
-                            //            input#visitEndDate.form-control(type='text', data-provide="datepicker-inline")
-                            //            span.input-group-addon
-                            //                i.glyphicon.glyphicon-calendar
-                            .form-group
-                                +button('Load All Visit Data','exportVisits()')
-                            .form-group
-                                div#tableHolder
-                                    table#visitTable.table-bordered.table.table-responsive
-            if user.admin === true
-                #admin.col-md-8.col-md-offset-2.hidden
-                    br
-                    +panel('Grant Exec', 'grantExec')
-                        +form
-                            +text('Username or ID Number', 'Enter a user identifier to grant exec to', 'grantExecID')
-                            +button('Grant','grantExec()')
-                    +panel('Reset Database', 'dump')
-                        +form
-                            +password('Enter Your Password', 'Enter password', 'dumpPassword')
-                            +password('Re-Enter Your Password', 'Re-enter your password', 'confirmDumpPassword')
-                            +button('Reset Database', 'resetDatabase()')
-            if (user.labMonitor !== true || user.exec !== true) && user.admin !== true
-                #grant.col-md-8.col-md-offset-2.hidden
-                    br
-                    +panel('Enter a Passphrase')
-                        +form
-                            +password('Passphrase', 'Enter the passphrase', 'passphrase')
-                            +button('Submit Passphrase', 'sendPassphrase()')
-        script(src='/js/jquery.js', integrity='sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=', crossorigin='anonymous')
-        script(src='/js/bootstrap.js', integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa', crossorigin='anonymous')
-        script(src="/js/bootstrap-datepicker.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous")
+                            +panel('Close Lab')
+                                +form
+                                    +button('Close Lab', 'closeLab()')
+                            
+                    if (user.exec === true || user.admin === true)
+                        #exec.col.d-none
+                            br
+                            if user.labMonitor !== true
+                                +panel('Close Lab')
+                                    +form
+                                        +button('Close Lab', 'closeLab()')
+                            +panel('Add Responsibility', 'addResponsibility')
+                                +form
+                                    +text('Responsibility Name', 'Enter a responsibility name', 'respName')
+                                    +button('Add', 'addResponsibility()')
+                            +panel('Grant Lab Monitor', 'grantLM')
+                                +form
+                                    +text('Username or ID Number', 'Enter a user identifier', 'grantLMID')
+                                    +button('Grant','grantLabMonitor()')
+                            +panel('Delete User', 'deleteUser')
+                                +form
+                                    +text('Username or ID Number', 'Enter a user identifier', 'toDelete')
+                                    +button('Delete', 'deleteUser()')
+                            +panel('Reset User Password', 'passwordReset')
+                                +form
+                                    .col-md-offset-2 Note: User's password will be reset to their ID number
+                                    br
+                                    +text('Username or ID Number', "Enter the user's identifier to reset their password", 'resetPasswordID')
+                                    +button('Reset User Password','resetPassword()')
+                            +panel('View Visits','viewVisits')
+                                +form
+                                    //.form-group
+                                    //    label.col-md-4.col-md-offset-1.control-label(for="#visitStartDate") Start Date
+                                    //    #visitStartDateGroup.col-md-6
+                                    //        .input-group.mb-3
+                                    //            input#visitStartDate.form-control(type='text', data-provide="datepicker-inline")
+                                    //            span.input-group-addon
+                                    //                i.glyphicon.glyphicon-calendar
+                                    //.form-group
+                                    //    label.col-md-4.col-md-offset-1.control-label(for="#visitEndDate") End Date
+                                    //    #visitEndDateGroup.col-md-6
+                                    //        .input-group.mb-3
+                                    //            input#visitEndDate.form-control(type='text', data-provide="datepicker-inline")
+                                    //            span.input-group-addon
+                                    //                i.glyphicon.glyphicon-calendar
+                                    .form-group
+                                        +button('Load All Visit Data','exportVisits()')
+                                    .form-group
+                                        div#tableHolder
+                                            table#visitTable.table-bordered.table.table-responsive
+                    if user.admin === true
+                        #admin.col.d-none
+                            br
+                            +panel('Grant Exec', 'grantExec')
+                                +form
+                                    +text('Username or ID Number', 'Enter a user identifier to grant exec to', 'grantExecID')
+                                    +button('Grant','grantExec()')
+                            +panel('Reset Database', 'dump')
+                                +form
+                                    +password('Enter Your Password', 'Enter password', 'dumpPassword')
+                                    +password('Re-Enter Your Password', 'Re-enter your password', 'confirmDumpPassword')
+                                    +button('Reset Database', 'resetDatabase()')
+                    if (user.labMonitor !== true || user.exec !== true || user.admin !== true)
+                        #grant.col.d-none
+                            br
+                            +panel('Enter a Passphrase')
+                                +form
+                                    +password('Passphrase', 'Enter the passphrase', 'passphrase')
+                                    +button('Submit Passphrase', 'sendPassphrase()')
+        script(src='/js/jquery.js')
+        script(src='/js/bootstrap.js')
+        script(src="/js/bootstrap-datepicker.js")
         script(src='/js/notify.js')
         script(src='/js/common.js')
         script(src='/js/home.js')

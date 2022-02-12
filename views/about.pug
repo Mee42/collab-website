@@ -8,64 +8,67 @@ html(lang=en)
     script(src='/js/jquery.js')
     script(src='/js/bootstrap.js')
     link(href='/css/bootstrap.css', rel='stylesheet')
-    link(href='/css/bootstrap-theme.min.css', rel='stylesheet')
-    link(href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet')
+
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css", rel="stylesheet")
     link(href='/css/collab.css', rel='stylesheet')
   body
     +default_nav_bar
     .container
-      br
-      br
-      row
-        .col-sm-12
-          row
-            .col-sm-7
-              h4 Description
-              hr
-            .col-sm-5
-              h4 Contact
-              hr
-          row
-            .col-sm-7
-              p
-                 | The WPI CollabLab is a student maker organization which administers
-                 | a member-operated lab space and provides a collaborative community
-                 | with the goal of fostering and facilitating extracurricular student projects at WPI.
-                 | These projects include Robotics, Mechatronics, Electronics, Computer Science,
-                 | cosplay, woodworking, and much more. Members have access to the tools, parts,
-                 | knowledge, inspiration, and assistance  necessary to cultivate their own out-of-class projects.
-                 | The international makerspace movement is growing rapidly.
-                 | Makerspaces tend to be loosely organized, governed by consensus, and infused
-                 | with an almost utopian spirit of cooperation, sharing, and technological enthusiasm.
-                 | Basically, everyone builds what they want, when they want, how they want.
-                 | If one person prefers to focus on one aspect of a project more than another, they just...do.
-                 | If a group of people decide to form together to work on a much larger project
-                 | (e.g. putting a hacker in space) they just...do. It's as easy as that!
-            .col-sm-5
+      .row
+        .col-md-6
+          h4 Description
+          hr
+          p
+            | The WPI CollabLab is a student maker organization which administers
+            | a member-operated lab space and provides a collaborative community
+            | with the goal of fostering and facilitating extracurricular student projects at WPI.
+            | These projects include Robotics, Mechatronics, Electronics, Computer Science,
+            | cosplay, woodworking, and much more. Members have access to the tools, parts,
+            | knowledge, inspiration, and assistance  necessary to cultivate their own out-of-class projects.
+            | The international makerspace movement is growing rapidly.
+            | Makerspaces tend to be loosely organized, governed by consensus, and infused
+            | with an almost utopian spirit of cooperation, sharing, and technological enthusiasm.
+            | Basically, everyone builds what they want, when they want, how they want.
+            | If one person prefers to focus on one aspect of a project more than another, they just...do.
+            | If a group of people decide to form together to work on a much larger project
+            | (e.g. putting a hacker in space) they just...do. It's as easy as that!
+
+        .col-md-6.h4
+          h4 Contact
+          hr
+          .row.my-3
               .flex-center
-                i.material-icons.right-padded-icon place
-                span Higgins 005 (Behind FRC)
-              br
+                i.bi-geo-alt-fill
+                span.ps-3 Higgins 005 (Behind FRC)
+          .row.my-3
               .flex-center
-                i.material-icons.right-padded-icon public
-                a(href='https://www.facebook.com/groups/collablab') Facebook Group
-              br
+                i.bi-facebook
+                a.ps-3(href='https://www.facebook.com/groups/collablab') Facebook Group
+          .row.my-3
               .flex-center
-                i.material-icons.right-padded-icon domain
-                a(href='https://wpi.campuslabs.com/engage/organization/collablab') Join the TechSync Page
-              br
+                i.bi-building
+                a.ps-3(href='https://wpi.campuslabs.com/engage/organization/collablab') Join the TechSync Page
+          .row.my-3
               p For questions or to join the mailing list, email us
               .flex-center
-                i.material-icons.right-padded-icon email
-                a(href='mailto:collablab@wpi.edu') collablab@wpi.edu
-      row
-        .col-sm-12.top40
-          row
-            .col-sm-12
-            h4 Gallery
-            hr
-          row
-            .col-sm-12
-            +responsive_image("/images/ece_bench.jpg")
-            +responsive_image("/images/primary_lab_picture.jpg")
-            +responsive_image("/images/3d_printers.jpg")
+                i.bi-envelope-fill
+                a.ps-3(href='mailto:collablab@wpi.edu') collablab@wpi.edu
+      .row
+        h4 Gallery
+        hr
+      .row
+        #aboutCarousel.carousel.slide(data-bs-ride='carousel')
+          .carousel-inner
+            .carousel-item.active
+              img.d-block.w-100(src="/images/ece_bench.jpg", alt="")
+            .carousel-item
+              img.d-block.w-100(src="/images/primary_lab_picture.jpg", alt="")
+            .carousel-item
+              img.d-block.w-100(src="/images/3d_printers.jpg", alt="")
+          button.carousel-control-prev(type='button', data-bs-target='#aboutCarousel', data-bs-slide='prev')
+            span.carousel-control-prev-icon(aria-hidden='true')
+            span.visually-hidden previous
+          button.carousel-control-next(type='button', data-bs-target='#aboutCarousel', data-bs-slide='next')
+            span.carousel-control-next-icon(aria-hidden='true')
+            span.visually-hidden next
+    script(src='/js/common.js')

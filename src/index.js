@@ -5,7 +5,8 @@ import bodyParser from "body-parser";
 import {createConnection,getConnectionManager} from 'typeorm'
 import {nukeOnRestart,cookieSecret,internalPort,externalPort} from './config'
 import {router as userRouter} from './users'
-import {internal as labInt, external as labExt, reloadOccupancyFromDB} from './lab'
+import { getMonitors, getUser } from "./userManagement";
+import {internal as labInt, external as labExt, reloadOccupancyFromDB, getResponsibilities} from './lab'
 import {routes as manageRoutes} from './manage'
 import {getLogin,resetDatabase} from './common'
 import {User} from "./models/user";
@@ -61,6 +62,12 @@ internal.get('/', function (req, res) {
 
 external.get('/schedule', function (req, res) {
     res.render('schedule');
+});
+
+external.get('/monitors', getLogin, (req, res) => {
+    getResponsibilities().then((resps) => {
+        res.render('monitors', {'resps': resps, 'user': req.user});
+    });
 });
 
 external.get('/about', function(req, res){

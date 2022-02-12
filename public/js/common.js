@@ -39,6 +39,11 @@ function isValidNickname(nickname){
   return nickname != null && regex.test(nickname);
 }
 
+function isValidResponsibilty(name) {
+  const regex = /^[\w'\-\s]*$/;
+  return name != null && regex.test(name);
+}
+
 function addError(idName, error, leave) {
     let idSel = $('#'+idName);
     idSel.notify(error, {className: 'error', elementPosition: 'right middle', autoHideDelay: 2000});
@@ -63,4 +68,8 @@ function convertSwipe(idNumber){
     }
   }
   return '';
+}
+
+function login() {
+  window.location.replace('/manage');
 }

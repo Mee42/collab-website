@@ -18,6 +18,7 @@ export const reloadOccupancyFromDB = async () => {
 import {getUser,getUserByUsername} from './userManagement'
 import {authInRequest,idNumberInRequest,loggedIn,isValidNickname} from "./common";
 import {Visit} from "./models/visit";
+import { Responsibility } from "./models/responsibility";
 import {MoreThan, LessThan} from "typeorm";
 
 let labStatus = {
@@ -67,6 +68,17 @@ external.post('/kick',loggedIn, async (req, res) => {
         await processSwipe(user, res);
     });
 });
+
+export async function addResponsibility(name) {
+    let resp = new Responsibility();
+    resp.name = name;
+    console.log(resp);
+    return resp.save();
+}
+
+export async function getResponsibilities() {
+    return await Responsibility.find();
+}
 
 export async function closeLab() {
     labStatus.open = false;

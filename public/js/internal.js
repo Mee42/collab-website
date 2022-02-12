@@ -170,7 +170,7 @@ function submitRegistration(){
     let newId = convertSwipe(userIDNumber.val().trim());
     let approver = convertSwipe(approval.val().trim());
     let username = $('#username').val().trim();
-    let passphrase = $('#passphrase').val().trim();
+    let passphrase = '';
     let password = passwordRegistration.val().trim();
     let confirmPassword = confirmPasswordRegistration.val().trim();
 
@@ -291,7 +291,7 @@ function submitRegistration(){
                     break;
             }
         });
-    return false;
+    return true;
 }
 
 function changePassword() {
@@ -303,7 +303,7 @@ function changePassword() {
     let idNumber = $('#hiddenId').val().trim();
 
     if (oldPassword === "") {
-        currentPassword.notify('Passwords field blank!', {className: 'error', elementPosition: 'right'});
+        currentPassword.notify('If your password was reset, it is your ID number.', {className: 'error', elementPosition: 'right'});
         currentPassword.focus();
         $('#currentPasswordGroup').addClass('has-error');
         return;
@@ -386,8 +386,8 @@ function getStatus(){
 }
 
 function refocusCursor() {
-  console.log(!(registration.data('bs.modal') || {}).isShown);
-  if (!(registration.data('bs.modal') || {}).isShown) {
+  console.log(!(registration.is(':visible') || closeModal.is(':visible') || kickModal.is(':visible') || passwordModal.is(':visible')));
+  if (!(registration.is(':visible') || closeModal.is(':visible') || kickModal.is(':visible') || passwordModal.is(':visible'))) {
     $('#idNumber').focus();
   }
 }

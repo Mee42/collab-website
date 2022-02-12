@@ -22,7 +22,7 @@ import {
     resetPassword,
     setPassword,
 } from "./userManagement";
-import {updateList,closeLab} from "./lab";
+import {updateList,closeLab, addResponsibility} from "./lab";
 
 let router = express.Router();
 
@@ -36,6 +36,14 @@ router.get('/',  (req, res) => {
 
 router.get('/home', loggedIn, (req, res) => {
     res.render('home', {'user': req.user, 'title': 'Management'});
+});
+
+router.post('/addResponsibility', loggedIn, async (req, res) => {
+    addResponsibility(req.body.respName).then(() => {
+        res.send('0').end();
+    }, () => {
+        res.send('1').end();
+    });
 });
 
 router.post('/getPermission', loggedIn, async (req, res) => {

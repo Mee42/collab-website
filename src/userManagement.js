@@ -30,6 +30,16 @@ export async function getUser(idNumber) {
     );
 }
 
+export async function getMonitors() {
+    return User.find({labMonitor: true}).then((users) => {
+        if(users !== undefined) {
+            return users;
+        } else {
+            return Promise.reject(new Error("No such users."));
+        }
+    });
+}
+
 export async function getUserByUsername(username) {
     return User.findOne({where: {username: username}}).then((user) => {
         if(user !== undefined) {

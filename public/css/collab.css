@@ -12,3 +12,8 @@
 .right-padded-icon {
     margin-right: 10px;
 }
+
+.btn-fix {
+    padding: 0;
+    border: none;
+}

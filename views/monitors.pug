@@ -1,0 +1,21 @@
+include common
+
+mixin button(title, action)
+    button.btn-outline-primary.btn.col-md-6(onClick!=action)=title
+
+html(lang='en')
+    head
+        title WPI Collablab - Lab Monitors
+        script(src='/js/jquery.js')
+        script(src='/js/bootstrap.js')
+        link(href='/css/bootstrap.css',  rel='stylesheet')
+        link(href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css", rel="stylesheet")
+
+    body
+        +default_nav_bar
+        .container
+            for el in resps
+                .row.mt-3
+                    p.col-md-6 hi #{el.name}
+                    if user && user.labMonitor == true
+                        +button("Claim!")
