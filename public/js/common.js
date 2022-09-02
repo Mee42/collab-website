@@ -61,7 +61,7 @@ function convertSwipe(idNumber){
   if(idNumber.length < 12){
     return '';
   }
-  if(idNumber[0] === '%'){
+  if(idNumber[0] === '%' || idNumber[0] === ';'){
       const id = idNumber.match(/[\d]{9}/);
       if(id.length > 0){
       return id[0];
