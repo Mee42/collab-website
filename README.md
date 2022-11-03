@@ -34,19 +34,19 @@ sudo service website start
 
   To use the site in a production setting, follow these steps (some commands may be debian centric and require conversion):
   1. Install dependencies:
-    ```
-    sudo apt install nodejs redis-server npm postgresql
-    sudo npm install -g forever
-    ```
+```
+sudo apt install nodejs redis-server npm postgresql
+sudo npm install -g forever
+```
 
   2. Clone the repository into some directory:
     `git clone https://github.com/WPI-CollabLab/Lab-Website.git`
 
   3. Install the node dependencies:
-    ```
-    cd collablab
-    npm install
-    ```
+```
+cd collablab
+npm install
+```
   4. Modify config.js, especially:
      - Default admin credentials, generally should be set by sysadmin or president to their information.
      - Default passphrases, there's three and they should be changed from their default
@@ -75,10 +75,10 @@ sudo service website start
     `git clone https://github.com/WPI-CollabLab/Lab-Website.git`
 
   3. Install the node dependencies:
-    ```
-    cd collablab
-    npm install
-    ```
+```
+cd collablab
+npm install
+```
   4. Start the postgresql server, supply the postgres username and password in the ormconfig.json, make sure to make a database called "collablab" or update ormconfig.js to the correct database name
 
   5. Run the website:
