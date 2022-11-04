@@ -11,9 +11,9 @@ export const nukeOnRestart = false; // debugging purposes
 export const usernameRegex = /^[\d\w]{4,}$/; // succeeds if match, allows letters, numbers, and underscores
 export const nameRegex = /^[a-zA-Z'\s]*$/; // succeeds if match, allows letters and spaces
 
-export const labMonitorPassphrase = "labMonitor2015";
-export const execPassphrase = "execsAreExecs";
-export const adminPassphrase = "adminzRule";
+export const labMonitorPassphrase = "lab";
+export const execPassphrase = "exec";
+export const adminPassphrase = "admin";
 
 export const internalPort = 8181;
 export const externalPort = 8182;

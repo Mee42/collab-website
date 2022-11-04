@@ -30,7 +30,11 @@ build/Release
 node_modules/
 #IDE stuff
 .idea
+.vscode
 
 dist/
 
 package-lock.json
+
+ormconfig.json
+src/config.js
