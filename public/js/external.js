@@ -19,16 +19,18 @@ function getStatus() {
 }
 
 function updatePage(newStatus) {
-    const isOpen = $('#isOpen');
-    if (newStatus.open) {
-        document.getElementById('isOpen').innerHTML = 'OPEN';
-        isOpen.removeClass('text-danger');
-        isOpen.addClass('text-success');
-    } else {
-        document.getElementById('isOpen').innerHTML = 'CLOSED';
-        isOpen.removeClass('text-success');
-        isOpen.addClass('text-danger');
-    }
+    let isOpen = $('#isOpen');
+	document.getElementById('isOpen').innerHTML = newStatus.open;
+	const lookup = {
+		OPEN: 'text-success',
+		CLOSED: 'text-danger',
+		LIMITED: 'text-warning'
+	}
+	isOpen.removeClass('text-success');
+	isOpen.removeClass('text-danger');
+	isOpen.removeClass('text-warning');
+	isOpen.addClass(lookup[newStatus.open]);
+
     let newList = '';
         for (let index in newStatus.members) {
           if (isKicking) {
