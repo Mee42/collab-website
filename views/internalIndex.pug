@@ -13,10 +13,12 @@ html(lang='en')
         +default_nav_bar(true)
         .container
             .row.justify-content-center
-                h1.col-auto
+                h1.col-auto(id='header0')
                     | The lab is currently&nbsp;
                     strong
                         span(id='isOpen')
+                    br
+                    span(id='toolWarning')
             form.row.mt-5.justify-content-center.form-signin(role='form' onsubmit="return false;")
                 .col-6.d-grid
                     h2.form-signin-heading Swipe to Enter Lab

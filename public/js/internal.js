@@ -111,6 +111,7 @@ function swipe(idNumber) {
                     break;
             }
         });
+	getStatus();
 }
 
 function showMessage(message, time, type) {
@@ -271,7 +272,6 @@ function submitRegistration(){
                     $('#idNumber').val(newId);
                     submitLogin();
                     break;
-
                 case 2:
                     addError('approval', 'That wasn\'t a lab monitor\'s ID!');
                     break;
@@ -393,16 +393,29 @@ function refocusCursor() {
 }
 
 function updatePage(newStatus) {
+	console.log(newStatus);
     let isOpen = $('#isOpen');
-    if (newStatus.open) {
-        document.getElementById('isOpen').innerHTML = 'OPEN';
-        isOpen.removeClass('text-danger');
-        isOpen.addClass('text-success');
-    } else {
-        document.getElementById('isOpen').innerHTML = 'CLOSED';
-        isOpen.removeClass('text-success');
-        isOpen.addClass('text-danger');
-    }
+	document.getElementById('isOpen').innerHTML = newStatus.open;
+	document.getElementById('header0').style = "text-align: center";
+	const lookup = {
+		OPEN: 'text-success',
+		CLOSED: 'text-danger',
+		LIMITED: 'text-warning'
+	}
+	isOpen.removeClass('text-success');
+	isOpen.removeClass('text-danger');
+	isOpen.removeClass('text-warning');
+	isOpen.addClass(lookup[newStatus.open]);
+	let toolWarning = document.getElementById('toolWarning');
+	toolWarning.style = "display: none;";
+	if(newStatus.open != "OPEN") {
+		toolWarning.style = "display: block; font-size: 35px;" + 
+			"text-align: center; color: red;";
+		toolWarning.innerHTML = 'Use of power tools is not allowed<br/><span style="font-size: 14px">To use power tools, find a lab monitor</span>';
+	}
+	
+
+
     let newList = '';
     for (let index in newStatus.members) {
         if (internal) {

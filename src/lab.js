@@ -8,7 +8,7 @@ export const reloadOccupancyFromDB = async () => {
         console.log(visit);
         if (labStatus.members[visit.user.idNumber] === undefined) {
             labStatus.members[visit.user.idNumber] = visit.user;
-            labStatus.open = true;
+			updateLabStatus();
             names[visit.user.username] = toDisp(visit.user);
 
         }
@@ -22,7 +22,7 @@ import { Responsibility } from "./models/responsibility";
 import {MoreThan, LessThan} from "typeorm";
 
 let labStatus = {
-    open: false,
+    open: "CLOSED",
     members: {}
 };
 
@@ -81,7 +81,7 @@ export async function getResponsibilities() {
 }
 
 export async function closeLab() {
-    labStatus.open = false;
+    labStatus.open = "CLOSED";
     for(const user of Object.values(labStatus.members)) {
         await swipeOut(user);
     }
@@ -102,33 +102,33 @@ export async function updateList()  {
 }
 
 async function processSwipe(user, res) {
-    if (!labStatus.open && user.labMonitor === false) {
-        res.send("1").end();
-        return;
-    }
-
     if (labStatus.members[user.idNumber] === undefined) {
         if (user.needsPassword === true) {
             res.send("4").end();
         } else {
             await swipeIn(user);
-            res.send("0").end();
         }
     } else {
-        const numLabMonitors = countLabMonitorsInLab();
-        if (numLabMonitors > 1 || user.labMonitor === false || Object.keys(names).length === 1) {
-            await swipeOut(user);
-            res.send("0").end();
-        } else {
-            res.send("3").end();
-        }
+		await swipeOut(user);
     }
-    labStatus.open = countLabMonitorsInLab() > 0;
+	updateLabStatus();
+	res.send("0").end();
 }
+
+function updateLabStatus() {
+	if(countPeopleInLab() == 0){
+		labStatus.open = "CLOSED"
+	} else if(countLabMonitorsInLab() == 0) {
+		labStatus.open = "LIMITED"
+	} else {
+		labStatus.open = "OPEN"; // there are lab monitors
+	}
+}
+
 
 async function swipeIn(user) {
     labStatus.members[user.idNumber] = user;
-    labStatus.open = true;
+	updateLabStatus();
     names[user.username] = toDisp(user);
     let visit = new Visit();
     visit.user = user;
@@ -162,3 +162,15 @@ function countLabMonitorsInLab() {
     }
     return count;
 }
+
+// idk how else to do this lol
+function countPeopleInLab() {
+    let count = 0;
+    for (let i in labStatus.members) {
+		count += 1;
+    }
+    return count;
+}
+
+
+

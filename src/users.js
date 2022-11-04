@@ -65,7 +65,8 @@ router.post('/register', async (req, res) => {
                         }
                     });
             }
-        },  () => {
+        },  async () => {
+			// if they are not a lab monitor
             res.send('2').end();
         });
     }
